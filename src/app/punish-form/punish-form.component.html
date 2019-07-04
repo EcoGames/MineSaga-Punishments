@@ -1,0 +1,43 @@
+<body>
+
+  <h1>New Punishment</h1>
+
+  <div class="form-wrapper">
+    <form [formGroup]="punishForm">
+
+      <mat-form-field>
+        <mat-label>Player Name</mat-label>
+        <input required matInput type="text" placeholder="Enter player name" formControlName="plrName">
+        <mat-error *ngIf="plrName.invalid && plrName.touched">
+          You need the player's name
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Reason</mat-label>
+        <textarea required matInput type="text" placeholder="Enter the reason" formControlName="reason"></textarea>
+        <mat-error *ngIf="reason.invalid && reason.touched">
+          You need a reason
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Offense Count</mat-label>
+        <mat-select (selectionChange)="changeOffenseCount($event)" formControlName="offenseCount">
+          <mat-option value="offense0">0</mat-option>
+          <mat-option value="offense1">1</mat-option>
+          <mat-option value="offense2">2</mat-option>
+          <mat-option value="offense3">3</mat-option>
+          <mat-option value="offense3Plus">3+</mat-option>
+        </mat-select>
+        <mat-error *ngIf="offenseCount.invalid && offenseCount.touched">
+          You need to provide the amount of past infractions
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" [disabled]="punishForm.invalid">Submit</button>
+
+    </form>
+  </div>
+
+</body>

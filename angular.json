@@ -119,6 +119,14 @@
           }
         }
       }
-    }},
-  "defaultProject": "MineSagaPunishment"
+    }
+  },
+  "defaultProject": "MineSagaPunishment",
+  "schematics": {
+    "@schematics/angular": {
+      "component": {
+        "spec": false
+      }
+    }
+  }
 }
