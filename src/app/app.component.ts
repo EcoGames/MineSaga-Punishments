@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { Router, NavigationEnd, ActivatedRoute } from "@angular/router";
 import { filter, map } from "rxjs/operators";
+import { AuthenticationService } from './services/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { filter, map } from "rxjs/operators";
 export class AppComponent implements OnInit {
   title = 'MineSaga Punishment';
 
-  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(public auth: AuthenticationService, private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     const appTitle = this.titleService.getTitle();

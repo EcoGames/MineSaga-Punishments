@@ -1,0 +1,30 @@
+h1 {
+  margin: 4rem 0;
+  text-align: center;
+  font-family: 'Raleway', sans-serif;
+}
+
+.form-wrapper {
+  padding: 50px;
+  margin: 0px auto;
+  -webkit-box-shadow: 0px 8px 6px -1px rgba(0, 0, 0, 0.16);
+  -moz-box-shadow: 0px 8px 6px -1px rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 8px 6px -1px rgba(0, 0, 0, 0.16);
+  border-radius: 5px;
+  width: 300px;
+}
+
+form {
+  width: 500px;
+  margin: 0 auto;
+}
+
+mat-form-field {
+  display: block;
+  width: 300px;
+  margin-top: 0.5rem;
+}
+
+button {
+  margin-top: 1rem;
+}

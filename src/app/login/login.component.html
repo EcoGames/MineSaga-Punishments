@@ -1,1 +1,29 @@
-<p>login works!</p>
+<body>
+
+  <h1>Login</h1>
+
+  <div class="form-wrapper">
+    <form [formGroup]="loginForm">
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input required matInput type="email" placeholder="Enter your email" formControlName="email">
+        <mat-error *ngIf="email.invalid && email.touched">
+          That email doesn't look right...
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input required matInput type="password" placeholder="Enter your password" formControlName="password">
+        <mat-error *ngIf="password.invalid && password.touched">
+          You need a password
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" [disabled]="loginForm.invalid" (click)="signIn()">Login</button>
+
+    </form>
+  </div>
+
+</body>
