@@ -1,24 +1,24 @@
 footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: white;
   width: 100%;
-  height: 4rem;
+  height: 50px;
   font-family: 'Raleway', sans-serif;
   background: rgb(47, 47, 47);
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   text-align: center;
+}
 
-  div {
-    margin-top: 1rem;
-  }
-
+.topLink {
+  margin-top: 4rem;
 }
 
 [scroll] {
   position: fixed;
-  top: 0;
-  width: 100%;
   z-index: 999;
 }
 

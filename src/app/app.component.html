@@ -48,7 +48,7 @@
       <mat-nav-list>
         <div *ngIf="auth.loggedIn; then loggedIn else notLoggedIn"></div>
         <ng-template #loggedIn>
-          <a routerLink="/new-punishment" mat-list-item>
+          <a class="topLink" routerLink="/new-punishment" mat-list-item>
             <mat-icon>add</mat-icon>
             Add Punishment
           </a>
@@ -66,7 +66,7 @@
           </a>
         </ng-template>
         <ng-template #notLoggedIn>
-          <a routerLink="/login" mat-list-item>
+          <a class="topLink" routerLink="/login" mat-list-item>
             <mat-icon>account_box</mat-icon>
             Login
           </a>
