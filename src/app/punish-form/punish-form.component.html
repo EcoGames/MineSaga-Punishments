@@ -1,9 +1,8 @@
-<body>
-
+<div id="pageContainer">
   <h1>New Punishment</h1>
 
   <div class="form-wrapper">
-    <form [formGroup]="punishForm">
+    <form [formGroup]="punishForm" (ngSubmit)="submitPunishment()">
 
       <mat-form-field>
         <mat-label>Player Name</mat-label>
@@ -35,9 +34,13 @@
         </mat-error>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" [disabled]="punishForm.invalid">Submit</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="punishForm.invalid">Submit</button>
 
     </form>
   </div>
 
-</body>
+  <div id="plrInfo">
+    <span id="plrNameSpan"></span>
+    <img id="plrAvatar" src="#" alt="">
+  </div>
+</div>

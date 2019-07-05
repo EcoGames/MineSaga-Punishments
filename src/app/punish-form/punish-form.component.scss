@@ -1,5 +1,10 @@
+#pageContainer {
+  height: 100vh;
+  overflow: hidden;
+}
+
 h1 {
-  margin: 4rem 0;
+  margin-top: 5rem;
   text-align: center;
   font-family: 'Raleway', sans-serif;
 }
@@ -7,9 +12,6 @@ h1 {
 .form-wrapper {
   padding: 50px;
   margin: 0px auto;
-  -webkit-box-shadow: 0px 8px 6px -1px rgba(0, 0, 0, 0.16);
-  -moz-box-shadow: 0px 8px 6px -1px rgba(0, 0, 0, 0.16);
-  box-shadow: 0px 8px 6px -1px rgba(0, 0, 0, 0.16);
   border-radius: 5px;
   width: 300px;
 }
@@ -27,4 +29,17 @@ mat-form-field {
 
 button {
   margin-top: 1rem;
+}
+
+#plrInfo {
+  position: absolute;
+  top: 0;
+  right: 15%;
+  margin-top: 10rem;
+
+  span {
+    display: block;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
 }

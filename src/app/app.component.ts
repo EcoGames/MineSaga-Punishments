@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { Router, NavigationEnd, ActivatedRoute } from "@angular/router";
 import { filter, map } from "rxjs/operators";
@@ -12,7 +12,7 @@ import { AuthenticationService } from './services/authentication.service';
 export class AppComponent implements OnInit {
   title = 'MineSaga Punishment';
 
-  constructor(public auth: AuthenticationService, private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(public auth: AuthenticationService, private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     const appTitle = this.titleService.getTitle();
@@ -29,6 +29,11 @@ export class AppComponent implements OnInit {
       ).subscribe((ttl: string) => {
         this.titleService.setTitle(ttl);
       });
+  }
+
+  @HostListener("window:scroll", ["$event"])
+  isAtTopOfPage() {
+    return document.documentElement.scrollTop == 0;
   }
 
 }

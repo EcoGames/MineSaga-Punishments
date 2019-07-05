@@ -8,7 +8,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { AppRoutingModule } from './app-routing.module';
 
 // Material UI Elements
-import { MatToolbarModule, MatIconModule, MatInputModule, MatButtonModule, MatSelectModule, MatMenuModule, MatSidenavModule, MatListModule } from '@angular/material';
+import { MatToolbarModule, MatIconModule, MatInputModule, MatButtonModule, MatSelectModule, MatMenuModule, MatSidenavModule, MatListModule, MatTableModule } from '@angular/material';
 
 // My Components
 import { AppComponent } from './app.component';
@@ -42,6 +42,8 @@ import { AuthenticationService } from "./services/authentication.service";
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
+    FlexLayoutModule,
     AppRoutingModule,
     ReactiveFormsModule,
     MatToolbarModule,
@@ -49,11 +51,10 @@ import { AuthenticationService } from "./services/authentication.service";
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
+    MatTableModule,
     MatMenuModule,
     MatSidenavModule,
     MatListModule,
-    HttpClientModule,
-    FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
