@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 // punishment service
-import { PunishmentService } from "../services/punishment.service";
+import { PunishmentService } from '../services/punishment.service';
 import { MCUser } from '../services/mcUser.model';
 
 @Component({
@@ -51,14 +51,14 @@ export class PunishFormComponent implements OnInit {
 
     this.punishService.getUserUUID(this.plrName.value, (response) => {
       if (response == null) {
-        alert("the username is not valid!");
+        alert('the username is not valid!');
         return;
       }
       this.userUUID = response.id;
       this.userAvatar = this.punishService.getUserAvatar(response.id);
       this.userName.innerHTML = this.plrName.value;
       this.userAvatarImg.setAttribute('src', this.userAvatar);
-    })
+    });
 
   }
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 
-import { auth } from "firebase/app";
-import { AngularFireAuth } from "@angular/fire/auth";
+import { auth } from 'firebase/app';
+import { AngularFireAuth } from '@angular/fire/auth';
 import {
   AngularFirestore,
   AngularFirestoreDocument,
@@ -16,7 +16,7 @@ import { loggedIn } from '@angular/fire/auth-guard';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  public loggedIn: boolean = false;
+  public loggedIn = false;
 
   constructor(public afAuth: AngularFireAuth, private router: Router, private afs: AngularFirestore) {
     this.loggedIn = !!sessionStorage.getItem('user');
@@ -29,12 +29,12 @@ export class AuthenticationService {
     sessionStorage.setItem('user', JSON.stringify(credential.user.toJSON()));
     this.loggedIn = true;
     await this.updateUserData(credential.user);
-    return this.router.navigate([''])
+    return this.router.navigate(['']);
   }
 
   // Firebase auth sign in, email and password
   async login(email: string, password: string) {
-    var result = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    const result = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
     await sessionStorage.setItem('user', JSON.stringify(result.user.toJSON()));
     this.loggedIn = true;
     await this.updateUserData(result.user);
@@ -51,7 +51,7 @@ export class AuthenticationService {
       return this.router.navigate(['']);
     }).catch((error) => {
       window.alert(error.message); // TODO: remove this and find a better way
-    })
+    });
   }
 
   // TODO: implement anon authentication
@@ -62,7 +62,7 @@ export class AuthenticationService {
       this.router.navigate(['']); /* Add some parameters to make sure they know it was sent */
     }).catch((error) => {
       console.log(error); /* Make a better way */
-    })
+    });
   }
 
   // Sending a password reset email
@@ -71,7 +71,7 @@ export class AuthenticationService {
       /* Navagate them back to home with params */
     }).catch((error) => {
       console.log(error); /* Make a better way */
-    })
+    });
   }
 
   // Sigout
@@ -96,7 +96,7 @@ export class AuthenticationService {
       email,
       displayName,
       photoURL
-    }
+    };
 
     return userRef.set(data, { merge: true });
 

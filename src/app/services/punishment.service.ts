@@ -8,10 +8,10 @@ import {
   AngularFirestoreDocument
 } from '@angular/fire/firestore';
 
-import { Punishment } from "./punishment.model";
+import { Punishment } from './punishment.model';
 import { Observable } from 'rxjs';
 
-import { MCUser } from "./mcUser.model";
+import { MCUser } from './mcUser.model';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,10 +19,10 @@ const httpOptions = {
   })
 };
 
-const corsProxy ="https://cors-anywhere.herokuapp.com/"
+const corsProxy = 'https://cors-anywhere.herokuapp.com/';
 
-const MOJANG_USER_UUID_URL = corsProxy + "https://api.mojang.com/users/profiles/minecraft/"
-const MC_AVATAR_URL = "https://minotar.net/body/";
+const MOJANG_USER_UUID_URL = corsProxy + 'https://api.mojang.com/users/profiles/minecraft/';
+const MC_AVATAR_URL = 'https://minotar.net/body/';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +34,7 @@ export class PunishmentService {
   private punishCollection: AngularFirestoreCollection;
 
   constructor(private afs: AngularFirestore, private http: HttpClient) {
-    this.punishCollection = afs.collection("punishments");
+    this.punishCollection = afs.collection('punishments');
   }
 
   public getUserUUID(username: string, callback): any {
@@ -44,7 +44,7 @@ export class PunishmentService {
         return;
       }
       callback(data);
-    })
+    });
 
   }
 
@@ -63,10 +63,10 @@ export class PunishmentService {
   }
 
   public deletePunishment(doc: AngularFirestoreDocument) {
-    doc.delete().then(function() {
-      console.log("Document successfully deleted!");
-    }).catch(function(error) {
-      console.error("Error removing document: ", error);
+    doc.delete().then(() => {
+      console.log('Document successfully deleted!');
+    }).catch((error) => {
+      console.error('Error removing document: ', error);
     });
   }
 

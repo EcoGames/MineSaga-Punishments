@@ -8,7 +8,7 @@ import { AuthenticationService } from '../services/authentication.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
 })
-export class SignupComponent implements OnInit {0
+export class SignupComponent implements OnInit {
   signupForm: FormGroup;
 
   constructor(public auth: AuthenticationService, private fb: FormBuilder) { }
@@ -23,15 +23,13 @@ export class SignupComponent implements OnInit {0
 
   checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string) {
     return (group: FormGroup) => {
-      let passwordInput = group.controls[passwordKey],
-        passwordConfirmationInput = group.controls[passwordConfirmationKey];
+      const passwordInput = group.controls[passwordKey];
+      const passwordConfirmationInput = group.controls[passwordConfirmationKey];
       if (passwordInput.value !== passwordConfirmationInput.value) {
         return passwordConfirmationInput.setErrors({ notEquivalent: true });
       }
-      else {
-        return passwordConfirmationInput.setErrors(null);
-      }
-    }
+      return passwordConfirmationInput.setErrors(null);
+    };
   }
 
   signUp() {
