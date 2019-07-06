@@ -17,8 +17,12 @@ import {
   MatMenuModule,
   MatSidenavModule,
   MatListModule,
-  MatTableModule
+  MatTableModule,
+  MatCardModule,
+  MatExpansionModule,
+  MatGridListModule
 } from '@angular/material';
+import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 // My Components
 import { AppComponent } from './app.component';
@@ -36,9 +40,11 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Services
 import { AuthenticationService } from './services/authentication.service';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   declarations: [
@@ -60,20 +66,23 @@ import { AuthenticationService } from './services/authentication.service';
     MatIconModule,
     MatInputModule,
     MatButtonModule,
+    MatGridListModule,
+    MatExpansionModule,
+    MatCardModule,
     MatSelectModule,
     MatTableModule,
     MatMenuModule,
     MatSidenavModule,
     MatListModule,
+    LayoutModule,
+    MaterialFileInputModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
-    AngularFireAuthGuardModule
+    AngularFireAuthGuardModule,
+    AngularFireStorageModule
   ],
-  providers: [
-    AuthenticationService,
-    Title
-  ],
+  providers: [AuthenticationService, Title],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

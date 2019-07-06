@@ -1,12 +1,30 @@
+#pageContainer {
+  min-height: 100vh;
+}
+
 table {
   width: 95%;
-  margin: 0 auto;
-  margin-top: 5rem;
-  margin-bottom: 5rem;
+  margin: 5rem auto;
   overflow: auto !important;
-  max-height: 100vh;
 }
 
 th {
   min-width: 200px;
+}
+
+@media only screen and (min-width: 3840px) {
+  table {
+    margin: 10rem auto;
+    height: 100vh;
+
+    th {
+      font-size: 2rem;
+      height: 100px;
+    }
+
+    td {
+      height: 150px;
+      font-size: 2.5rem;
+    }
+  }
 }

@@ -4,112 +4,193 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Punishment } from '../services/punishment.model';
 
 const options = {
-  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric'
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour12: false,
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric'
 };
 
-const theDate = new Date().toLocaleDateString('en-us', options);
+const theDate = Date.now();
 const PUNISHMENT_DATA: Punishment[] = [
   {
-    punUser: 'first', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'first',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 2, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 2,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 3, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 3,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 2, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 2,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 2, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 2,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 3, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 3,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'example', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
+    punUser: 'example',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
   },
   {
-    punUser: 'hello', punBy: 'moderator',
-    date: new Date().toLocaleDateString('en-us', options), priorOffenses: 1, reason: 'I\'m a reason'
-  },
+    punUser: 'hello',
+    punBy: 'moderator',
+    date: Date.now(),
+    priorOffenses: 1,
+    reason: 'I\'m a reason'
+  }
 ];
 
 @Component({
@@ -118,11 +199,17 @@ const PUNISHMENT_DATA: Punishment[] = [
   styleUrls: ['./punishments.component.scss']
 })
 export class PunishmentsComponent implements OnInit {
-  displayedColumns: string[] = ['punUser', 'punBy', 'date', 'priorOffenses', 'reason'];
+  displayedColumns: string[] = [
+    'punUser',
+    'punBy',
+    'date',
+    'priorOffenses',
+    'reason'
+  ];
   dataSource = new MatTableDataSource(PUNISHMENT_DATA);
   cache: Array<Punishment> = PUNISHMENT_DATA;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.clearCache();
@@ -134,6 +221,4 @@ export class PunishmentsComponent implements OnInit {
       this.cache = {};
     }, 1000 * 60 * 10);
   }
-
-
 }

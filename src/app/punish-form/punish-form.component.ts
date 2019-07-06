@@ -1,9 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl
+} from '@angular/forms';
+import { FileValidator } from 'ngx-material-file-input';
 
 // punishment service
 import { PunishmentService } from '../services/punishment.service';
+import { Punishment } from '../services/punishment.model';
 import { MCUser } from '../services/mcUser.model';
 
 @Component({
@@ -12,55 +19,81 @@ import { MCUser } from '../services/mcUser.model';
   styleUrls: ['./punish-form.component.scss']
 })
 export class PunishFormComponent implements OnInit {
+  // the form group itself
   punishForm: FormGroup;
+  // an instance of the punisheduser inferface
+  punUserUUID: string;
+  punUserAvatarURL: string;
+  // punish-form elements
+  nameElement: HTMLElement;
+  avatarImgElement: HTMLElement;
 
-  userUUID: string;
-  userAvatarImg: HTMLElement;
-  userName: HTMLElement;
-  userAvatar: string;
+  punishment: Punishment;
 
-  constructor(private fb: FormBuilder, public punishService: PunishmentService) { }
+  // the max file size for the evidence (5MB)
+  maxFileSize: number = 5 * 1024 * 1024;
+
+  constructor(
+    private fb: FormBuilder,
+    public punishService: PunishmentService
+  ) {}
 
   ngOnInit() {
-    this.userAvatarImg = document.getElementById('plrAvatar');
-    this.userName = document.getElementById('plrNameSpan');
+    // initialize variables
+    this.avatarImgElement = document.getElementById('plrAvatar');
+    this.nameElement = document.getElementById('plrNameSpan');
+    // create the form controls
     this.punishForm = this.fb.group({
       plrName: new FormControl('', [Validators.required]),
       reason: new FormControl('', [Validators.required]),
-      offenseCount: new FormControl('', [Validators.required])
+      offenseCount: new FormControl('', [Validators.required]),
+      evidenceUpload: new FormControl(undefined, [
+        Validators.required,
+        FileValidator.maxContentSize(this.maxFileSize)
+      ])
     });
   }
 
-  changeOffenseCount(event: any) {
-    console.log(event.value);
-  }
-
+  // get the plrName form
   public get plrName() {
     return this.punishForm.get('plrName');
   }
 
+  // get the reason form
   public get reason() {
     return this.punishForm.get('reason');
   }
 
+  // get the offenseCount form
   public get offenseCount() {
     return this.punishForm.get('offenseCount');
   }
 
-  public submitPunishment() {
-
-    this.punishService.getUserUUID(this.plrName.value, (response) => {
-      if (response == null) {
-        alert('the username is not valid!');
-        return;
-      }
-      this.userUUID = response.id;
-      this.userAvatar = this.punishService.getUserAvatar(response.id);
-      this.userName.innerHTML = this.plrName.value;
-      this.userAvatarImg.setAttribute('src', this.userAvatar);
-    });
-
+  // get the evidenceUpload form
+  public get evidenceUpload() {
+    return this.punishForm.get('evidenceUpload');
   }
 
+  // submit the new punishment form, called when punish-form is submitted
+  public async submitPunishment() {
+    const response: MCUser = await this.punishService.getUserUUID(
+      this.plrName.value
+    );
 
+    if (response == null) {
+      alert('the username is not valid!');
+      return;
+    }
+    this.punUserUUID = response.id;
+    this.punUserAvatarURL = await this.punishService.getUserAvatar(response.id);
+    this.nameElement.innerHTML = this.plrName.value;
+    this.avatarImgElement.setAttribute('src', this.punUserAvatarURL);
+
+    // this.punishment = {
+    //   punUser: this.plrName.value,
+
+    //   date: Date.now(),
+
+    // }
+  }
 }

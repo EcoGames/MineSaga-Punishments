@@ -1,37 +1,87 @@
 <div id="pageContainer">
-
   <h1>Sign up</h1>
 
   <div class="form-wrapper">
-    <form [formGroup]="signupForm" (ngSubmit)="signUp()">
+    <form
+      [formGroup]="signupForm"
+      (ngSubmit)="signUp()"
+      class="mat-elevation-z6"
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>MC Username</mat-label>
+        <input
+          required
+          matInput
+          type="text"
+          placeholder="Enter your MC username"
+          formControlName="mcUsername"
+        />
+        <mat-error
+          *ngIf="
+            mcUsername.invalid &&
+            mcUsername.touched &&
+            !mcUsername.getError('invalidMCUsername')
+          "
+        >
+          You need to enter your username!
+        </mat-error>
+        <mat-error *ngIf="mcUsername.getError('invalidMCUsername')">
+          Invalid MC username!
+        </mat-error>
+      </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
-        <input required matInput type="email" placeholder="Enter your email" formControlName="email">
+        <input
+          required
+          matInput
+          type="email"
+          placeholder="Enter your email"
+          formControlName="email"
+        />
         <mat-error *ngIf="email.invalid && email.touched">
           That email doesn't look right...
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
-        <input required matInput type="password" placeholder="Enter your password" formControlName="password">
+        <input
+          required
+          matInput
+          type="password"
+          placeholder="Enter your password"
+          formControlName="password"
+        />
         <mat-error *ngIf="password.invalid && password.touched">
           You need a password
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Confirm Password</mat-label>
-        <input required matInput type="password" placeholder="Confirm your password" formControlName="confPassword">
-        <mat-error *ngIf="confPassword.hasError('notEquivalent') && confPassword.touched">
+        <input
+          required
+          matInput
+          type="password"
+          placeholder="Confirm your password"
+          formControlName="confPassword"
+        />
+        <mat-error
+          *ngIf="confPassword.hasError('notEquivalent') && confPassword.touched"
+        >
           The passwords don't match
         </mat-error>
       </mat-form-field>
 
-      <button type="submit" mat-raised-button color="primary" [disabled]="signupForm.invalid">Sign up</button>
-
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="signupForm.invalid"
+      >
+        Sign up
+      </button>
     </form>
   </div>
-
 </div>

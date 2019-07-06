@@ -17,12 +17,12 @@ export class AppComponent implements OnInit {
     private titleService: Title,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit() {
     const appTitle = this.titleService.getTitle();
-    this.router
-      .events.pipe(
+    this.router.events
+      .pipe(
         filter(event => event instanceof NavigationEnd),
         map(() => {
           const child = this.activatedRoute.firstChild;
@@ -31,7 +31,8 @@ export class AppComponent implements OnInit {
           }
           return appTitle;
         })
-      ).subscribe((ttl: string) => {
+      )
+      .subscribe((ttl: string) => {
         this.titleService.setTitle(ttl);
       });
   }
@@ -40,5 +41,4 @@ export class AppComponent implements OnInit {
   isAtTopOfPage() {
     return document.documentElement.scrollTop === 0;
   }
-
 }

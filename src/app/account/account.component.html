@@ -1,4 +1,39 @@
 <div id="pageContainer">
-  <h1>Account</h1>
+  <h1 id="pageTitle">Account Dashboard</h1>
 
+  <div class="mat-card-container">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Profile settings
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="card-content">
+          <div id="serverRank">
+            <span><strong>Current Rank:</strong> Moderator</span>
+          </div>
+
+          <mat-accordion class="headers-align">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>Change Email</mat-panel-title>
+                <mat-panel-description
+                  >Current email: example@example.com</mat-panel-description
+                >
+              </mat-expansion-panel-header>
+              This the expansion 1 content
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                Change Password
+              </mat-expansion-panel-header>
+              This the expansion 2 content
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

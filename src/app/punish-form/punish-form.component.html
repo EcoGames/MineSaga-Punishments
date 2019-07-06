@@ -2,27 +2,45 @@
   <h1>New Punishment</h1>
 
   <div class="form-wrapper">
-    <form [formGroup]="punishForm" (ngSubmit)="submitPunishment()">
-
-      <mat-form-field>
+    <form
+      [formGroup]="punishForm"
+      (ngSubmit)="submitPunishment()"
+      class="mat-elevation-z6"
+    >
+      <mat-form-field appearance="fill">
         <mat-label>Player Name</mat-label>
-        <input required matInput type="text" placeholder="Enter player name" formControlName="plrName">
+        <input
+          required
+          matInput
+          type="text"
+          placeholder="Enter player name"
+          formControlName="plrName"
+        />
+        <mat-hint>
+          Case doesn't matter!
+        </mat-hint>
         <mat-error *ngIf="plrName.invalid && plrName.touched">
           You need the player's name
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="fill">
         <mat-label>Reason</mat-label>
-        <textarea required matInput type="text" placeholder="Enter the reason" formControlName="reason"></textarea>
+        <textarea
+          required
+          matInput
+          type="text"
+          placeholder="Enter the reason"
+          formControlName="reason"
+        ></textarea>
         <mat-error *ngIf="reason.invalid && reason.touched">
           You need a reason
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="fill">
         <mat-label>Offense Count</mat-label>
-        <mat-select (selectionChange)="changeOffenseCount($event)" formControlName="offenseCount">
+        <mat-select required formControlName="offenseCount">
           <mat-option value="offense0">0</mat-option>
           <mat-option value="offense1">1</mat-option>
           <mat-option value="offense2">2</mat-option>
@@ -34,13 +52,46 @@
         </mat-error>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="punishForm.invalid">Submit</button>
+      <mat-form-field appearance="fill">
+        <mat-label>Upload Evidence</mat-label>
+        <ngx-mat-file-input
+          required
+          placeholder="Upload Evidence"
+          valuePlaceholder="No file selected"
+          formControlName="evidenceUpload"
+        >
+        </ngx-mat-file-input>
+        <mat-icon matSuffix>folder</mat-icon>
+        <mat-error *ngIf="evidenceUpload.hasError('required')">
+          Please select a file
+        </mat-error>
+        <mat-error *ngIf="evidenceUpload.hasError('maxContentSize')">
+          The total size must not exceed
+          {{
+            evidenceUpload.getError("maxContentSize").maxSize | byteFormat
+          }}
+          ({{
+            evidenceUpload.getError("maxContentSize").actualSize | byteFormat
+          }}).
+        </mat-error>
+        <mat-hint>
+          Has to be less then 5MB (5,000 KB)!
+        </mat-hint>
+      </mat-form-field>
 
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="punishForm.invalid"
+      >
+        Submit
+      </button>
     </form>
   </div>
 
   <div id="plrInfo">
     <span id="plrNameSpan"></span>
-    <img id="plrAvatar" src="#" alt="">
+    <img id="plrAvatar" src="#" alt="" />
   </div>
 </div>

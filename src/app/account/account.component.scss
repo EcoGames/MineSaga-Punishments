@@ -1,10 +1,35 @@
 #pageContainer {
   height: 100vh;
-  overflow: hidden;
+  margin-top: 5rem;
 }
 
-h1 {
-  margin-top: 5rem;
-  text-align: center;
-  font-family: 'Raleway', sans-serif;
+#pageTitle {
+  margin-left: 2rem;
+}
+
+.mat-card-container {
+  width: 95%;
+  margin: 0 auto;
+
+  mat-card {
+    height: 15em;
+  }
+}
+
+.card-content {
+  font-size: 1.3em;
+}
+
+#serverRank {
+  margin: 1rem 0;
+}
+
+.headers-align .mat-expansion-panel-header-title,
+.headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
 }

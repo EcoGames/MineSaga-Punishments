@@ -13,11 +13,35 @@ import { AuthGuard } from './guard/auth.guard';
 import { SecureInnerPagesGuard } from './guard/secure-inner-pages.guard';
 
 const routes: Routes = [
-  { path: '', component: PunishmentsComponent, data: { title: 'Punishments | MineSaga Punish' } },
-  { path: 'account', component: AccountComponent, canActivate: [AuthGuard], data: { title: 'Account | MineSaga Punish' } },
-  { path: 'new-punishment', component: PunishFormComponent, canActivate: [AuthGuard], data: { title: 'New Punishment | MineSaga Punish' } },
-  { path: 'login', component: LoginComponent, canActivate: [SecureInnerPagesGuard], data: { title: 'Login | MineSaga Punish' } },
-  { path: 'signup', component: SignupComponent, canActivate: [SecureInnerPagesGuard], data: { title: 'Sign up | MineSaga Punish' } },
+  {
+    path: '',
+    component: PunishmentsComponent,
+    data: { title: 'Punishments | MineSaga Punish' }
+  },
+  {
+    path: 'account',
+    component: AccountComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'Account | MineSaga Punish' }
+  },
+  {
+    path: 'new-punishment',
+    component: PunishFormComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'New Punishment | MineSaga Punish' }
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [SecureInnerPagesGuard],
+    data: { title: 'Login | MineSaga Punish' }
+  },
+  {
+    path: 'signup',
+    component: SignupComponent,
+    canActivate: [SecureInnerPagesGuard],
+    data: { title: 'Sign up | MineSaga Punish' }
+  },
   { path: '**', redirectTo: '' }
 ];
 
@@ -25,4 +49,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

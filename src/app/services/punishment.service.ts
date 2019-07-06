@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import {
   AngularFirestore,
@@ -9,65 +9,89 @@ import {
 } from '@angular/fire/firestore';
 
 import { Punishment } from './punishment.model';
-import { Observable } from 'rxjs';
-
 import { MCUser } from './mcUser.model';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json'
-  })
-};
+import {
+  AngularFireStorage,
+  AngularFireStorageReference
+} from '@angular/fire/storage';
 
 const corsProxy = 'https://cors-anywhere.herokuapp.com/';
 
-const MOJANG_USER_UUID_URL = corsProxy + 'https://api.mojang.com/users/profiles/minecraft/';
+const MOJANG_USER_UUID_URL =
+  corsProxy + 'https://api.mojang.com/users/profiles/minecraft/';
 const MC_AVATAR_URL = 'https://minotar.net/body/';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PunishmentService {
+  storageRef: AngularFireStorageReference;
+  imagesRef: AngularFireStorageReference;
 
-  mcAccountValid: boolean;
-
-  private punishCollection: AngularFirestoreCollection;
-
-  constructor(private afs: AngularFirestore, private http: HttpClient) {
-    this.punishCollection = afs.collection('punishments');
+  constructor(
+    public afs: AngularFirestore,
+    private http: HttpClient,
+    afStorage: AngularFireStorage
+  ) {
+    this.storageRef = afStorage.ref('');
+    this.imagesRef = this.storageRef.child('evidence');
   }
 
-  public getUserUUID(username: string, callback): any {
-    this.http.get(MOJANG_USER_UUID_URL + username).subscribe((data: MCUser) => {
-      if (!data) {
-        callback(null);
-        return;
-      }
-      callback(data);
+  public getUserUUID(username: string): Promise<MCUser> {
+    return new Promise(resolve => {
+      this.http
+        .get(MOJANG_USER_UUID_URL + username)
+        .subscribe((data: MCUser) => {
+          resolve(data);
+        });
     });
-
   }
 
-  public getUserAvatar(UUID): string {
-    return MC_AVATAR_URL + UUID;
+  public getUserAvatar(UUID): Promise<string> {
+    return Promise.resolve(MC_AVATAR_URL + UUID);
   }
 
-  public addPunishment({ punUser, punBy, date, priorOffenses, reason }: Punishment) {
-    this.punishCollection.add({
-      punUser,
-      punBy,
-      date,
-      priorOffenses,
-      reason
-    });
+  public async addPunishment(
+    { punUser, punBy, date, priorOffenses, reason }: Punishment,
+    file
+  ) {
+    const punishCollRef: AngularFirestoreCollection = this.afs.collection(
+      'punishments'
+    );
+
+    punishCollRef
+      .add({
+        punUser,
+        punBy,
+        date,
+        priorOffenses,
+        reason
+      })
+      .then(doc => {
+        this.uploadEvidence(file, doc.id);
+      });
   }
 
   public deletePunishment(doc: AngularFirestoreDocument) {
-    doc.delete().then(() => {
-      console.log('Document successfully deleted!');
-    }).catch((error) => {
-      console.error('Error removing document: ', error);
-    });
+    doc
+      .delete()
+      .then(() => {
+        console.log('Document successfully deleted!');
+      })
+      .catch(error => {
+        console.error('Error removing document: ', error);
+      });
   }
 
+  public async uploadEvidence(file, fileName): Promise<string> {
+    return new Promise(resolve => {
+      this.imagesRef
+        .child(fileName)
+        .put(file.value.files[0])
+        .then(snapshot => {
+          console.log(snapshot);
+          resolve(snapshot);
+        });
+    });
+  }
 }

@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl
+} from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -11,12 +16,15 @@ import { AuthenticationService } from '../services/authentication.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor(public auth: AuthenticationService, private fb: FormBuilder) { }
+  constructor(public auth: AuthenticationService, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.loginForm = this.fb.group({
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$')])
+      password: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$')
+      ])
     });
   }
 
@@ -35,5 +43,4 @@ export class LoginComponent implements OnInit {
   public get password() {
     return this.loginForm.get('password');
   }
-
 }

@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+  AbstractControl
+} from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
+
+import { PunishmentService } from '../services/punishment.service';
 
 @Component({
   selector: 'app-signup',
@@ -11,17 +19,36 @@ import { AuthenticationService } from '../services/authentication.service';
 export class SignupComponent implements OnInit {
   signupForm: FormGroup;
 
-  constructor(public auth: AuthenticationService, private fb: FormBuilder) { }
+  constructor(
+    public auth: AuthenticationService,
+    public fb: FormBuilder,
+    public punishService: PunishmentService
+  ) {}
 
   ngOnInit() {
-    this.signupForm = this.fb.group({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$')]),
-      confPassword: new FormControl('', [Validators.required])
-    }, { validators: this.checkIfMatchingPasswords('password', 'confPassword') } );
+    this.signupForm = this.fb.group(
+      {
+        mcUsername: new FormControl('', [
+          Validators.required,
+          this.checkIfMCUserNameIsValid
+        ]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [
+          Validators.required,
+          Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$')
+        ]),
+        confPassword: new FormControl('', [Validators.required])
+      },
+      {
+        validators: [this.checkIfMatchingPasswords('password', 'confPassword')]
+      }
+    );
   }
 
-  checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string) {
+  checkIfMatchingPasswords(
+    passwordKey: string,
+    passwordConfirmationKey: string
+  ) {
     return (group: FormGroup) => {
       const passwordInput = group.controls[passwordKey];
       const passwordConfirmationInput = group.controls[passwordConfirmationKey];
@@ -32,12 +59,30 @@ export class SignupComponent implements OnInit {
     };
   }
 
+  checkIfMCUserNameIsValid(control: AbstractControl) {
+    if (control.value === '') {
+      return;
+    }
+    if (this.punishService.getUserUUID(control.value) == null) {
+      return { invalidMCUsername: true };
+    }
+    return null;
+  }
+
   signUp() {
-    this.auth.signUp(this.email.value, this.password.value);
+    this.auth.signUp(
+      this.email.value,
+      this.password.value,
+      this.mcUsername.value
+    );
   }
 
   googleSignIn() {
     this.auth.googleSignin();
+  }
+
+  public get mcUsername() {
+    return this.signupForm.get('mcUsername');
   }
 
   public get email() {
@@ -51,5 +96,4 @@ export class SignupComponent implements OnInit {
   public get confPassword() {
     return this.signupForm.get('confPassword');
   }
-
 }
