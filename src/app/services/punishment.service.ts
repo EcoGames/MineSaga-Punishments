@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
+import * as firebase from 'firebase/app';
 import {
   AngularFirestore,
-  AngularFirestoreCollection,
   AngularFirestoreDocument
 } from '@angular/fire/firestore';
 
@@ -14,25 +14,33 @@ import {
   AngularFireStorage,
   AngularFireStorageReference
 } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
 
 const corsProxy = 'https://cors-anywhere.herokuapp.com/';
 
 const MOJANG_USER_UUID_URL =
   corsProxy + 'https://api.mojang.com/users/profiles/minecraft/';
-const MC_AVATAR_URL = 'https://minotar.net/body/';
+const MC_AVATAR_URL = 'https://minotar.net/armor/body/';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PunishmentService {
+  punishmentsRef;
+  public myPunishments$: Observable<Array<Punishment>>;
+  public punishments: Array<Punishment> = [];
+
   storageRef: AngularFireStorageReference;
   imagesRef: AngularFireStorageReference;
 
   constructor(
     public afs: AngularFirestore,
     private http: HttpClient,
-    afStorage: AngularFireStorage
+    afStorage: AngularFireStorage,
+    public zone: NgZone
   ) {
+    this.punishmentsRef = afs.collection('punishments');
+
     this.storageRef = afStorage.ref('');
     this.imagesRef = this.storageRef.child('evidence');
   }
@@ -47,28 +55,40 @@ export class PunishmentService {
     });
   }
 
+  public getAllPunishments() {
+    return this.afs
+      .collection('punishments', ref => ref.orderBy('date', 'desc'))
+      .valueChanges();
+  }
+
   public getUserAvatar(UUID): Promise<string> {
     return Promise.resolve(MC_AVATAR_URL + UUID);
   }
 
   public async addPunishment(
-    { punUser, punBy, date, priorOffenses, reason }: Punishment,
-    file
+    { punUser, punBy, priorOffenses, reason, date }: Punishment,
+    file,
+    punUserUID?
   ) {
-    const punishCollRef: AngularFirestoreCollection = this.afs.collection(
-      'punishments'
-    );
-
-    punishCollRef
-      .add({
+    this.punishmentsRef
+      .doc(punUserUID)
+      .set({
         punUser,
         punBy,
         date,
         priorOffenses,
         reason
       })
-      .then(doc => {
-        this.uploadEvidence(file, doc.id);
+      .then(() => {
+        if (file == null || file === undefined) {
+          this.uploadEvidence(file, punUserUID).then(resp => {
+            resp.ref.getDownloadURL().then(url => {
+              this.punishmentsRef.doc(punUserUID).update({
+                evidenceURL: url
+              });
+            });
+          });
+        }
       });
   }
 
@@ -83,14 +103,15 @@ export class PunishmentService {
       });
   }
 
-  public async uploadEvidence(file, fileName): Promise<string> {
+  public async uploadEvidence(file, fileName: string): Promise<any> {
     return new Promise(resolve => {
       this.imagesRef
         .child(fileName)
-        .put(file.value.files[0])
+        .put(file.value._files[0])
         .then(snapshot => {
-          console.log(snapshot);
-          resolve(snapshot);
+          let tempdata: any;
+          tempdata = snapshot;
+          resolve(tempdata);
         });
     });
   }

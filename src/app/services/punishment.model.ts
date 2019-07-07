@@ -1,3 +1,4 @@
+
 export interface Punishment {
   punUser: string;
   punBy: string;

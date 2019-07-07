@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 import {
   FormGroup,
@@ -6,41 +6,44 @@ import {
   Validators,
   FormControl,
   AbstractControl
-} from '@angular/forms';
-import { AuthenticationService } from '../services/authentication.service';
+} from "@angular/forms";
 
-import { PunishmentService } from '../services/punishment.service';
+import { AuthenticationService } from "../services/authentication.service";
+import { PunishmentService } from "../services/punishment.service";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
-  selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  selector: "app-signup",
+  templateUrl: "./signup.component.html",
+  styleUrls: ["./signup.component.scss"]
 })
 export class SignupComponent implements OnInit {
   signupForm: FormGroup;
+  correctUsername: string;
 
   constructor(
     public auth: AuthenticationService,
     public fb: FormBuilder,
-    public punishService: PunishmentService
+    public punishServ: PunishmentService,
+    public http: HttpClient
   ) {}
 
   ngOnInit() {
     this.signupForm = this.fb.group(
       {
-        mcUsername: new FormControl('', [
+        mcUsername: new FormControl("", [
           Validators.required,
-          this.checkIfMCUserNameIsValid
+          MCAccountValidatorService.username(this.http)
         ]),
-        email: new FormControl('', [Validators.required, Validators.email]),
-        password: new FormControl('', [
+        email: new FormControl("", [Validators.required, Validators.email]),
+        password: new FormControl("", [
           Validators.required,
-          Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$')
+          Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$")
         ]),
-        confPassword: new FormControl('', [Validators.required])
+        confPassword: new FormControl("", [Validators.required])
       },
       {
-        validators: [this.checkIfMatchingPasswords('password', 'confPassword')]
+        validators: [this.checkIfMatchingPasswords("password", "confPassword")]
       }
     );
   }
@@ -59,22 +62,16 @@ export class SignupComponent implements OnInit {
     };
   }
 
-  checkIfMCUserNameIsValid(control: AbstractControl) {
-    if (control.value === '') {
-      return;
-    }
-    if (this.punishService.getUserUUID(control.value) == null) {
-      return { invalidMCUsername: true };
-    }
-    return null;
-  }
+  async signUp() {
 
-  signUp() {
-    this.auth.signUp(
-      this.email.value,
-      this.password.value,
-      this.mcUsername.value
-    );
+    this.correctUsername = await this.punishServ.getUserUUID(this.mcUsername.value).then((resp) => {
+      this.auth.signUp(
+        this.email.value,
+        this.password.value,
+        resp.name
+      );
+      return resp.name;
+    })
   }
 
   googleSignIn() {
@@ -82,18 +79,44 @@ export class SignupComponent implements OnInit {
   }
 
   public get mcUsername() {
-    return this.signupForm.get('mcUsername');
+    return this.signupForm.get("mcUsername");
   }
 
   public get email() {
-    return this.signupForm.get('email');
+    return this.signupForm.get("email");
   }
 
   public get password() {
-    return this.signupForm.get('password');
+    return this.signupForm.get("password");
   }
 
   public get confPassword() {
-    return this.signupForm.get('confPassword');
+    return this.signupForm.get("confPassword");
   }
+
+}
+
+export class MCAccountValidatorService {
+  static username(http: HttpClient) {
+    return (control: AbstractControl) => {
+      const mcUsername = control.value;
+      if (mcUsername === "") {
+        return;
+      }
+      return http
+        .get(
+          "https://cors-anywhere.herokuapp.com/https://api.mojang.com/users/profiles/minecraft/" +
+            mcUsername
+        )
+        .subscribe(data => {
+          if (data != null) {
+            return control.setErrors(null);
+          } else {
+            return control.setErrors({ mcUsernameInvalid: true });
+          }
+        });
+      
+    };
+  }
+
 }

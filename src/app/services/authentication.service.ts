@@ -54,11 +54,14 @@ export class AuthenticationService {
         this.sendEmailVerification();
         sessionStorage.setItem('user', JSON.stringify(result.user.toJSON()));
         this.loggedIn = true;
-        result.user.updateProfile({
-          displayName: username
-        });
-        this.updateUserData(result.user);
-        return this.router.navigate(['']);
+        result.user
+          .updateProfile({
+            displayName: username
+          })
+          .then(() => {
+            this.updateUserData(result.user);
+            return this.router.navigate(['']);
+          });
       })
       .catch(error => {
         window.alert(error.message); // TODO: remove this and find a better way
@@ -109,14 +112,14 @@ export class AuthenticationService {
       `users/${user.uid}`
     );
 
-    if (isUndefined(user.username)) {
-      user.username = '';
+    if (isUndefined(user.displayName)) {
+      user.displayName = '';
     }
 
     const data: User = {
       uid: user.uid,
       email: user.email,
-      username: user.username,
+      username: user.displayName,
       roles: {
         helper: true
       }

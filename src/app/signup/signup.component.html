@@ -18,14 +18,14 @@
         />
         <mat-error
           *ngIf="
-            mcUsername.invalid &&
+            mcUsername.getError('required') &&
             mcUsername.touched &&
-            !mcUsername.getError('invalidMCUsername')
+            !mcUsername.getError('mcUsernameInvalid')
           "
         >
           You need to enter your username!
         </mat-error>
-        <mat-error *ngIf="mcUsername.getError('invalidMCUsername')">
+        <mat-error *ngIf="mcUsername.getError('mcUsernameInvalid')">
           Invalid MC username!
         </mat-error>
       </mat-form-field>

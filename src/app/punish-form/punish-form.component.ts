@@ -8,6 +8,8 @@ import {
 } from '@angular/forms';
 import { FileValidator } from 'ngx-material-file-input';
 
+import * as firebase from 'firebase/app';
+
 // punishment service
 import { PunishmentService } from '../services/punishment.service';
 import { Punishment } from '../services/punishment.model';
@@ -48,7 +50,6 @@ export class PunishFormComponent implements OnInit {
       reason: new FormControl('', [Validators.required]),
       offenseCount: new FormControl('', [Validators.required]),
       evidenceUpload: new FormControl(undefined, [
-        Validators.required,
         FileValidator.maxContentSize(this.maxFileSize)
       ])
     });
@@ -86,14 +87,20 @@ export class PunishFormComponent implements OnInit {
     }
     this.punUserUUID = response.id;
     this.punUserAvatarURL = await this.punishService.getUserAvatar(response.id);
-    this.nameElement.innerHTML = this.plrName.value;
+    this.nameElement.innerText = response.name;
     this.avatarImgElement.setAttribute('src', this.punUserAvatarURL);
 
-    // this.punishment = {
-    //   punUser: this.plrName.value,
-
-    //   date: Date.now(),
-
-    // }
+    this.punishment = {
+      punUser: response.name,
+      punBy: firebase.auth().currentUser.displayName,
+      priorOffenses: this.offenseCount.value,
+      date: Date.now(),
+      reason: this.reason.value
+    };
+    this.punishService.addPunishment(
+      this.punishment,
+      this.evidenceUpload,
+      this.punUserUUID
+    );
   }
 }

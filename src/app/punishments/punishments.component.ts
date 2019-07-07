@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
+import { PunishmentService } from '../services/punishment.service';
 import { Punishment } from '../services/punishment.model';
+import { DocumentData } from '@angular/fire/firestore';
 
 const options = {
   weekday: 'long',
@@ -15,7 +17,7 @@ const options = {
 };
 
 const theDate = Date.now();
-const PUNISHMENT_DATA: Punishment[] = [
+/* const PUNISHMENT_DATA: Punishment[] = [
   {
     punUser: 'first',
     punBy: 'moderator',
@@ -191,7 +193,7 @@ const PUNISHMENT_DATA: Punishment[] = [
     priorOffenses: 1,
     reason: 'I\'m a reason'
   }
-];
+]; */
 
 @Component({
   selector: 'app-punishments',
@@ -204,21 +206,14 @@ export class PunishmentsComponent implements OnInit {
     'punBy',
     'date',
     'priorOffenses',
-    'reason'
+    'reason',
+    'evidence'
   ];
-  dataSource = new MatTableDataSource(PUNISHMENT_DATA);
-  cache: Array<Punishment> = PUNISHMENT_DATA;
+  dataSource;
 
-  constructor() {}
+  constructor(public punService: PunishmentService) {}
 
-  ngOnInit() {
-    this.clearCache();
-  }
-
-  clearCache() {
-    setInterval(function() {
-      console.log('clearing cache');
-      this.cache = {};
-    }, 1000 * 60 * 10);
+  async ngOnInit() {
+    this.dataSource = this.punService.getAllPunishments();
   }
 }

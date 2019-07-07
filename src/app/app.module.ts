@@ -82,7 +82,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     AngularFireAuthGuardModule,
     AngularFireStorageModule
   ],
-  providers: [AuthenticationService, Title],
+  providers: [Title],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
