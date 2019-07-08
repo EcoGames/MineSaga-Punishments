@@ -26,15 +26,14 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Reason</mat-label>
-        <textarea
-          required
-          matInput
-          type="text"
-          placeholder="Enter the reason"
-          formControlName="reason"
-        ></textarea>
-        <mat-error *ngIf="reason.invalid && reason.touched">
-          You need a reason
+        <input required type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="reason" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let punishment of filteredPunishments | async" [value]="punishment">
+            {{punishment}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="reason.getError('required')">
+          You need a reason!
         </mat-error>
       </mat-form-field>
 
@@ -55,6 +54,7 @@
       <mat-form-field appearance="fill">
         <mat-label>Upload Evidence</mat-label>
         <ngx-mat-file-input
+          required
           placeholder="Upload Evidence"
           valuePlaceholder="No file selected"
           formControlName="evidenceUpload"
@@ -66,15 +66,13 @@
         </mat-error>
         <mat-error *ngIf="evidenceUpload.hasError('maxContentSize')">
           The total size must not exceed
-          {{
-            evidenceUpload.getError("maxContentSize").maxSize | byteFormat
-          }}
+          {{ evidenceUpload.getError('maxContentSize').maxSize | byteFormat }}
           ({{
-            evidenceUpload.getError("maxContentSize").actualSize | byteFormat
+            evidenceUpload.getError('maxContentSize').actualSize | byteFormat
           }}).
         </mat-error>
         <mat-hint>
-          Has to be less then 5MB (5,000 KB)!<br>
+          Has to be less then 5MB (5,000 KB)!<br />
           Evidence is not required if you are a Mod+
         </mat-hint>
       </mat-form-field>

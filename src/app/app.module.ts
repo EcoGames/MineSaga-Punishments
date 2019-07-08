@@ -20,7 +20,8 @@ import {
   MatTableModule,
   MatCardModule,
   MatExpansionModule,
-  MatGridListModule
+  MatGridListModule,
+  MatAutocompleteModule
 } from '@angular/material';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
@@ -73,6 +74,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatTableModule,
     MatMenuModule,
     MatSidenavModule,
+    MatAutocompleteModule,
     MatListModule,
     LayoutModule,
     MaterialFileInputModule,

@@ -16,6 +16,7 @@ const routes: Routes = [
   {
     path: '',
     component: PunishmentsComponent,
+    canActivate: [AuthGuard],
     data: { title: 'Punishments | MineSaga Punish' }
   },
   {

@@ -31,25 +31,9 @@
       <th mat-header-cell *matHeaderCellDef class="evidenceHeader">
         View Evidence
       </th>
-      <div
-        style="display: none"
-        *ngIf="
-          evidenceHTML.href != '' &&
-            evidenceHTML.href != undefined &&
-            evidenceHTML.href != null;
-          else noEvidenceHTML
-        "
-      ></div>
-      <ng-template #evidenceHTML>
-        <td mat-cell *matCellDef="let punishment" class="evidenceHeader">
-          <a target="_blank" href="{{ punishment.evidenceURL }}">Evidence</a>
-        </td>
-      </ng-template>
-      <ng-template #noEvidenceHTML>
-        <td mat-cell *matCellDef="let punishment" class="evidenceHeader">
-          No Evidence
-        </td></ng-template
-      >
+      <td mat-cell *matCellDef="let punishment">
+        <a target="_blank" href="{{ punishment.evidenceURL }}">Evidence</a>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -112,14 +112,14 @@ export class AuthenticationService {
       `users/${user.uid}`
     );
 
-    if (isUndefined(user.displayName)) {
-      user.displayName = '';
+    if (isUndefined(user.username)) {
+      user.username = '';
     }
 
     const data: User = {
       uid: user.uid,
       email: user.email,
-      username: user.displayName,
+      username: user.username,
       roles: {
         helper: true
       }

@@ -14,6 +14,8 @@ import * as firebase from 'firebase/app';
 import { PunishmentService } from '../services/punishment.service';
 import { Punishment } from '../services/punishment.model';
 import { MCUser } from '../services/mcUser.model';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-punish-form',
@@ -21,6 +23,35 @@ import { MCUser } from '../services/mcUser.model';
   styleUrls: ['./punish-form.component.scss']
 })
 export class PunishFormComponent implements OnInit {
+  punishments: string[] = [
+    'Spamming / Chat Flooding / Character Flooding',
+    'Spam Encouragement',
+    'Double Posting',
+    'Staff Disrespect',
+    'TP Trapping',
+    'Player Disrespect',
+    'Racism / Discrimination',
+    'Death Threats',
+    'Inappropriate Chat Content & Vulgar language',
+    'Exploiting or Bug Abuse',
+    'Xray',
+    'Ban Evasion',
+    'Mute Evasion',
+    'Alt Limit',
+    'Report Abuse and Help OP abuse',
+    'Wasting staff time',
+    'IRL Trading & Sales of accounts',
+    'Staff Impersonation',
+    'Advertising',
+    'DDoS or Dox Threads or Comedy',
+    'Cheating',
+    'Inappropriate nickname ',
+    'Insiding',
+    'Inappropriate username',
+    'Auction House Scamming'
+  ];
+  filteredPunishments: Observable<string[]>;
+
   // the form group itself
   punishForm: FormGroup;
   // an instance of the punisheduser inferface
@@ -47,12 +78,26 @@ export class PunishFormComponent implements OnInit {
     // create the form controls
     this.punishForm = this.fb.group({
       plrName: new FormControl('', [Validators.required]),
-      reason: new FormControl('', [Validators.required]),
+      reason: new FormControl(),
       offenseCount: new FormControl('', [Validators.required]),
       evidenceUpload: new FormControl(undefined, [
+        Validators.required,
         FileValidator.maxContentSize(this.maxFileSize)
       ])
     });
+
+    this.filteredPunishments = this.reason.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.punishments.filter(punishment =>
+      punishment.toLowerCase().includes(filterValue)
+    );
   }
 
   // get the plrName form

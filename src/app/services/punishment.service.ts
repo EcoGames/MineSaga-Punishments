@@ -1,8 +1,7 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import * as firebase from 'firebase/app';
 import {
   AngularFirestore,
   AngularFirestoreDocument
@@ -36,8 +35,7 @@ export class PunishmentService {
   constructor(
     public afs: AngularFirestore,
     private http: HttpClient,
-    afStorage: AngularFireStorage,
-    public zone: NgZone
+    afStorage: AngularFireStorage
   ) {
     this.punishmentsRef = afs.collection('punishments');
 
@@ -80,15 +78,13 @@ export class PunishmentService {
         reason
       })
       .then(() => {
-        if (file == null || file === undefined) {
-          this.uploadEvidence(file, punUserUID).then(resp => {
-            resp.ref.getDownloadURL().then(url => {
-              this.punishmentsRef.doc(punUserUID).update({
-                evidenceURL: url
-              });
+        this.uploadEvidence(file, punUserUID).then(resp => {
+          resp.ref.getDownloadURL().then(url => {
+            this.punishmentsRef.doc(punUserUID).update({
+              evidenceURL: url
             });
           });
-        }
+        });
       });
   }
 
