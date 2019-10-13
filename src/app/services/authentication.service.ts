@@ -119,10 +119,7 @@ export class AuthenticationService {
     const data: User = {
       uid: user.uid,
       email: user.email,
-      username: user.username,
-      roles: {
-        helper: true
-      }
+      username: user.username
     };
 
     return userRef.set(data, { merge: true });

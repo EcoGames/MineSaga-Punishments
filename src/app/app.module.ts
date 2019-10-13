@@ -21,7 +21,8 @@ import {
   MatCardModule,
   MatExpansionModule,
   MatGridListModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatStepperModule
 } from '@angular/material';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
@@ -29,7 +30,6 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { AppComponent } from './app.component';
 import { PunishFormComponent } from './punish-form/punish-form.component';
 import { AccountComponent } from './account/account.component';
-import { PunishmentsComponent } from './punishments/punishments.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 
@@ -44,15 +44,16 @@ import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Services
-import { AuthenticationService } from './services/authentication.service';
 import { LayoutModule } from '@angular/cdk/layout';
+
+// Modules
+import { PunishmentsModule } from './punishments/punishments.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     PunishFormComponent,
     AccountComponent,
-    PunishmentsComponent,
     LoginComponent,
     SignupComponent
   ],
@@ -61,6 +62,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     BrowserAnimationsModule,
     HttpClientModule,
     FlexLayoutModule,
+    PunishmentsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     MatToolbarModule,
@@ -69,6 +71,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatButtonModule,
     MatGridListModule,
     MatExpansionModule,
+    MatStepperModule,
     MatCardModule,
     MatSelectModule,
     MatTableModule,
@@ -82,7 +85,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireAuthGuardModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
   ],
   providers: [Title],
   bootstrap: [AppComponent]

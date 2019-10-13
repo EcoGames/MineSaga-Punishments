@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 // My components
 import { AccountComponent } from './account/account.component';
 import { PunishFormComponent } from './punish-form/punish-form.component';
-import { PunishmentsComponent } from './punishments/punishments.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 
@@ -15,9 +14,8 @@ import { SecureInnerPagesGuard } from './guard/secure-inner-pages.guard';
 const routes: Routes = [
   {
     path: '',
-    component: PunishmentsComponent,
-    canActivate: [AuthGuard],
-    data: { title: 'Punishments | MineSaga Punish' }
+    redirectTo: 'punishments',
+    pathMatch: 'full'
   },
   {
     path: 'account',

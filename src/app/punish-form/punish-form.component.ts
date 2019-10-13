@@ -4,9 +4,11 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  FormControl
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
+  FormArray
 } from '@angular/forms';
-import { FileValidator } from 'ngx-material-file-input';
 
 import * as firebase from 'firebase/app';
 
@@ -16,11 +18,20 @@ import { Punishment } from '../services/punishment.model';
 import { MCUser } from '../services/mcUser.model';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 @Component({
   selector: 'app-punish-form',
   templateUrl: './punish-form.component.html',
-  styleUrls: ['./punish-form.component.scss']
+  styleUrls: ['./punish-form.component.scss'],
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { showError: true }
+    }
+  ]
 })
 export class PunishFormComponent implements OnInit {
   punishments: string[] = [
@@ -53,7 +64,9 @@ export class PunishFormComponent implements OnInit {
   filteredPunishments: Observable<string[]>;
 
   // the form group itself
-  punishForm: FormGroup;
+  basicPunishInfo: FormGroup;
+  punishEvidenceInfo: FormGroup;
+  extraPunishInfo: FormGroup;
   // an instance of the punisheduser inferface
   punUserUUID: string;
   punUserAvatarURL: string;
@@ -68,29 +81,70 @@ export class PunishFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public punishService: PunishmentService
+    public punishService: PunishmentService,
+    public router: Router,
+    public http: HttpClient
   ) {}
 
   ngOnInit() {
-    // initialize variables
+    // initialize variables & get the html elements
     this.avatarImgElement = document.getElementById('plrAvatar');
     this.nameElement = document.getElementById('plrNameSpan');
-    // create the form controls
-    this.punishForm = this.fb.group({
-      plrName: new FormControl('', [Validators.required]),
-      reason: new FormControl(),
-      offenseCount: new FormControl('', [Validators.required]),
-      evidenceUpload: new FormControl(undefined, [
-        Validators.required,
-        FileValidator.maxContentSize(this.maxFileSize)
-      ])
+    // create the first form controls
+    this.basicPunishInfo = this.fb.group({
+      usrName: [
+        '',
+        [Validators.required, MCAccountValidatorService.username(this.http)]
+      ],
+      punishType: ['', Validators.required],
+      selectPunishment: [],
+      offenseCount: ['', Validators.required]
     });
 
-    this.filteredPunishments = this.reason.valueChanges.pipe(
+    // create the second form controls
+    this.punishEvidenceInfo = this.fb.group(
+      {
+        linkEvidence: this.fb.array([this.fb.group({ linkEvidenceObj: '' })]),
+        fileUplEvidence: this.fb.array([this.fb.group({ fileEvidenceObj: '' })])
+      },
+      {
+        validators: this.atLeastOne(Validators.required, [
+          'linkEvidence',
+          'fileUplEvidence'
+        ])
+      }
+    );
+
+    // create the last form controls
+    this.extraPunishInfo = this.fb.group({
+      extraInfo: ['']
+    });
+
+    // filter the punishments
+    this.filteredPunishments = this.selectPunishment.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value))
     );
   }
+
+  atLeastOne = (validator: ValidatorFn, controls: string[] = null) => (
+    group: FormGroup
+  ): ValidationErrors | null => {
+    if (!controls) {
+      controls = Object.keys(group.controls);
+    }
+
+    const hasAtLeastOne =
+      group &&
+      group.controls &&
+      controls.some(k => !validator(group.controls[k]));
+
+    return hasAtLeastOne
+      ? null
+      : {
+          atLeastOne: true
+        };
+  };
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
@@ -101,29 +155,60 @@ export class PunishFormComponent implements OnInit {
   }
 
   // get the plrName form
-  public get plrName() {
-    return this.punishForm.get('plrName');
+  public get usrName() {
+    return this.basicPunishInfo.get('usrName');
+  }
+
+  // get the plrName form
+  public get punishType() {
+    return this.basicPunishInfo.get('punishType');
   }
 
   // get the reason form
-  public get reason() {
-    return this.punishForm.get('reason');
+  public get selectPunishment() {
+    return this.basicPunishInfo.get('selectPunishment');
   }
 
   // get the offenseCount form
   public get offenseCount() {
-    return this.punishForm.get('offenseCount');
+    return this.basicPunishInfo.get('offenseCount');
   }
 
   // get the evidenceUpload form
-  public get evidenceUpload() {
-    return this.punishForm.get('evidenceUpload');
+  public get fileUplEvidence() {
+    return this.punishEvidenceInfo.get('fileUplEvidence') as FormArray;
+  }
+
+  // get link evidence
+  public get linkEvidence() {
+    return this.punishEvidenceInfo.get('linkEvidence') as FormArray;
+  }
+
+  // get extra info
+  public get extraInfo() {
+    return this.extraPunishInfo.get('extraInfo');
+  }
+
+  addLinkEvidence() {
+    this.linkEvidence.push(this.fb.group({ linkEvidenceObj: '' }));
+  }
+
+  removeLinkEvidence(index) {
+    this.linkEvidence.removeAt(index);
+  }
+
+  addFileEvidence() {
+    this.fileUplEvidence.push(this.fb.group({ fileEvidenceObj: '' }));
+  }
+
+  removeFileEvidence(index) {
+    this.fileUplEvidence.removeAt(index);
   }
 
   // submit the new punishment form, called when punish-form is submitted
   public async submitPunishment() {
     const response: MCUser = await this.punishService.getUserUUID(
-      this.plrName.value
+      this.usrName.value
     );
 
     if (response == null) {
@@ -138,14 +223,53 @@ export class PunishFormComponent implements OnInit {
     this.punishment = {
       punUser: response.name,
       punBy: firebase.auth().currentUser.displayName,
+      punType: this.punishType.value,
       priorOffenses: this.offenseCount.value,
       date: Date.now(),
-      reason: this.reason.value
+      reason: this.selectPunishment.value,
+      extraInfo: this.extraInfo.value
     };
-    this.punishService.addPunishment(
-      this.punishment,
-      this.evidenceUpload,
-      this.punUserUUID
-    );
+    if (this.fileUplEvidence.value._files == null) {
+      console.log("user did link");
+      this.punishService.addPunishment(
+        this.punishment,
+        this.linkEvidence.value,
+        this.punUserUUID,
+        true
+      );
+    } else {
+      this.punishService.addPunishment(
+        this.punishment,
+        this.fileUplEvidence,
+        this.punUserUUID,
+        false
+      );
+    }
+    // TODO: change this method (add if statement?) based on if the user chose to submit a link or file
+
+    // return this.router.navigate(['']);
+  }
+}
+
+export class MCAccountValidatorService {
+  static username(http: HttpClient) {
+    return (control: AbstractControl) => {
+      const mcUsername = control.value;
+      if (mcUsername === '') {
+        return;
+      }
+      return http
+        .get(
+          'https://cors-anywhere.herokuapp.com/https://api.mojang.com/users/profiles/minecraft/' +
+            mcUsername
+        )
+        .subscribe(data => {
+          if (data != null) {
+            return control.setErrors(null);
+          } else {
+            return control.setErrors({ mcUsernameInvalid: true });
+          }
+        });
+    };
   }
 }

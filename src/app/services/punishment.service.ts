@@ -14,6 +14,8 @@ import {
   AngularFireStorageReference
 } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
+import * as firebase from 'firebase';
+import * as moment from 'moment';
 
 const corsProxy = 'https://cors-anywhere.herokuapp.com/';
 
@@ -64,30 +66,60 @@ export class PunishmentService {
   }
 
   public async addPunishment(
-    { punUser, punBy, priorOffenses, reason, date }: Punishment,
-    file,
-    punUserUID?
+    {
+      punUser,
+      punBy,
+      priorOffenses,
+      reason,
+      date,
+      extraInfo,
+      punType
+    }: Punishment,
+    evidence,
+    punUserUID,
+    linkEvidence: boolean
   ) {
+    // format the current date using momentjs
+    let formattedDate = moment(date).format();
     this.punishmentsRef
       .doc(punUserUID)
       .set({
         punUser,
         punBy,
-        date,
+        punType,
+        date: formattedDate,
         priorOffenses,
-        reason
+        reason,
+        extraInfo
       })
       .then(() => {
-        this.uploadEvidence(file, punUserUID).then(resp => {
-          resp.ref.getDownloadURL().then(url => {
-            this.punishmentsRef.doc(punUserUID).update({
-              evidenceURL: url
-            });
+        if (!linkEvidence) {
+          // if they didn't use links then upload a file
+          this.uploadEvidence(evidence, punUserUID + ' ' + formattedDate).then(
+            resp => {
+              // get download url
+              resp.ref.getDownloadURL().then(url => {
+                this.punishmentsRef.doc(punUserUID).update({
+                  // edit the evidence url of the doc to the provided one
+                  evidenceURL: url
+                });
+              });
+            }
+          );
+        } else {
+          // used a link
+          let tempdata: string[] = [];
+          evidence.forEach(element => {
+            tempdata.push(element);
           });
-        });
+          this.punishmentsRef.doc(punUserUID).update({
+            evidenceURL: tempdata
+          });
+        }
       });
   }
 
+  // deletes punishment based on the firestore document
   public deletePunishment(doc: AngularFirestoreDocument) {
     doc
       .delete()
@@ -105,9 +137,7 @@ export class PunishmentService {
         .child(fileName)
         .put(file.value._files[0])
         .then(snapshot => {
-          let tempdata: any;
-          tempdata = snapshot;
-          resolve(tempdata);
+          resolve(snapshot);
         });
     });
   }

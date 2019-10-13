@@ -16,184 +16,6 @@ const options = {
   second: 'numeric'
 };
 
-const theDate = Date.now();
-/* const PUNISHMENT_DATA: Punishment[] = [
-  {
-    punUser: 'first',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 2,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 3,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 2,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 2,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 3,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'example',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  },
-  {
-    punUser: 'hello',
-    punBy: 'moderator',
-    date: Date.now(),
-    priorOffenses: 1,
-    reason: 'I\'m a reason'
-  }
-]; */
 
 @Component({
   selector: 'app-punishments',
@@ -204,10 +26,12 @@ export class PunishmentsComponent implements OnInit {
   displayedColumns: string[] = [
     'punUser',
     'punBy',
+    'punType',
     'date',
     'priorOffenses',
     'reason',
-    'evidence'
+    'evidenceURL',
+    'extraInfo'
   ];
   dataSource;
 

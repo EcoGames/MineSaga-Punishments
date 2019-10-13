@@ -2,90 +2,201 @@
   <h1>New Punishment</h1>
 
   <div class="form-wrapper">
-    <form
-      [formGroup]="punishForm"
-      (ngSubmit)="submitPunishment()"
-      class="mat-elevation-z6"
-    >
-      <mat-form-field appearance="fill">
-        <mat-label>Player Name</mat-label>
-        <input
-          required
-          matInput
-          type="text"
-          placeholder="Enter player name"
-          formControlName="plrName"
-        />
-        <mat-hint>
-          Case doesn't matter!
-        </mat-hint>
-        <mat-error *ngIf="plrName.invalid && plrName.touched">
-          You need the player's name
-        </mat-error>
-      </mat-form-field>
+    <mat-horizontal-stepper [linear]="false" #stepper>
+      <mat-step [stepControl]="basicPunishInfo">
+        <form [formGroup]="basicPunishInfo">
+          <ng-template matStepLabel>Basic info</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>Player Name</mat-label>
+            <input
+              required
+              matInput
+              type="text"
+              placeholder="Enter player name"
+              formControlName="usrName"
+            />
+            <mat-hint>
+              Case doesn't matter!
+            </mat-hint>
+            <!-- <mat-error *ngIf="usrName.getError('required') && usrName.touched">
+              You need the player's name
+            </mat-error> -->
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Punishment Type</mat-label>
+            <mat-select required formControlName="punishType">
+              <mat-option value="Warn">Warn</mat-option>
+              <mat-option value="Mute">Mute</mat-option>
+              <mat-option value="Ban">Ban</mat-option>
+            </mat-select>
+            <!-- <mat-error
+              *ngIf="punishType.getError('required') && punishType.touched"
+            >
+              You need to provide the amount of past infractions
+            </mat-error> -->
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Offense Count</mat-label>
+            <mat-select required formControlName="offenseCount">
+              <mat-option value="0">0</mat-option>
+              <mat-option value="1">1</mat-option>
+              <mat-option value="2">2</mat-option>
+              <mat-option value="3">3</mat-option>
+              <mat-option value="3+">3+</mat-option>
+            </mat-select>
+            <!-- <mat-error *ngIf="offenseCount.invalid && offenseCount.touched">
+              You need to provide the amount of past infractions
+            </mat-error> -->
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Reason</mat-label>
+            <input
+              required
+              type="text"
+              placeholder="Pick one"
+              aria-label="Number"
+              matInput
+              [formControl]="selectPunishment"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option
+                *ngFor="let punishment of filteredPunishments | async"
+                [value]="punishment"
+              >
+                {{ punishment }}
+              </mat-option>
+            </mat-autocomplete>
+            <!-- <mat-error *ngIf="reason.getError('required')">
+              You need a reason!
+            </mat-error> -->
+          </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Reason</mat-label>
-        <input required type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="reason" [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let punishment of filteredPunishments | async" [value]="punishment">
-            {{punishment}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="reason.getError('required')">
-          You need a reason!
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Offense Count</mat-label>
-        <mat-select required formControlName="offenseCount">
-          <mat-option value="0">0</mat-option>
-          <mat-option value="1">1</mat-option>
-          <mat-option value="2">2</mat-option>
-          <mat-option value="3">3</mat-option>
-          <mat-option value="3+">3+</mat-option>
-        </mat-select>
-        <mat-error *ngIf="offenseCount.invalid && offenseCount.touched">
-          You need to provide the amount of past infractions
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Upload Evidence</mat-label>
-        <ngx-mat-file-input
-          required
-          placeholder="Upload Evidence"
-          valuePlaceholder="No file selected"
-          formControlName="evidenceUpload"
-        >
-        </ngx-mat-file-input>
-        <mat-icon matSuffix>folder</mat-icon>
-        <mat-error *ngIf="evidenceUpload.hasError('required')">
-          Please select a file
-        </mat-error>
-        <mat-error *ngIf="evidenceUpload.hasError('maxContentSize')">
-          The total size must not exceed
-          {{ evidenceUpload.getError('maxContentSize').maxSize | byteFormat }}
-          ({{
-            evidenceUpload.getError('maxContentSize').actualSize | byteFormat
-          }}).
-        </mat-error>
-        <mat-hint>
-          Has to be less then 5MB (5,000 KB)!<br />
-          Evidence is not required if you are a Mod+
-        </mat-hint>
-      </mat-form-field>
-
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="punishForm.invalid"
-      >
-        Submit
-      </button>
-    </form>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="punishEvidenceInfo">
+        <form [formGroup]="punishEvidenceInfo">
+          <div formArrayName="fileUplEvidence">
+            <ng-template matStepLabel>Upload evidence</ng-template>
+            <div
+              class="field-container"
+              *ngFor="
+                let item of fileUplEvidence.controls;
+                let fileIndex = index
+              "
+              [formGroupName]="fileIndex"
+            >
+              <mat-form-field appearance="fill">
+                <mat-label>Upload a file</mat-label>
+                <ngx-mat-file-input
+                  placeholder="Upload Evidence"
+                  valuePlaceholder="No file selected"
+                  formControlName="fileEvidenceObj"
+                ></ngx-mat-file-input>
+              </mat-form-field>
+              <button
+                color="primary"
+                mat-icon-button
+                type="button"
+                (click)="removeFileEvidence(fileIndex)"
+              >
+                <mat-icon
+                  class="remove-btn"
+                  aria-hidden="false"
+                  aria-label="remove"
+                  >clear</mat-icon
+                >
+              </button>
+            </div>
+            <button
+              color="primary"
+              mat-icon-button
+              type="button"
+              (click)="addFileEvidence()"
+            >
+              <mat-icon class="add-btn" aria-hidden="false" aria-label="add"
+                >add</mat-icon
+              >
+            </button>
+          </div>
+          <div formArrayName="linkEvidence">
+            <ng-template matStepLabel>Upload evidence</ng-template>
+            <div
+              class="field-container"
+              *ngFor="let item of linkEvidence.controls; let linkIndex = index"
+              [formGroupName]="linkIndex"
+            >
+              <mat-form-field appearance="fill">
+                <mat-label>Add an evidence link</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Put a link here"
+                  formControlName="linkEvidenceObj"
+                />
+                <mat-hint
+                  >Please add http(s):// infront of your links!</mat-hint
+                >
+              </mat-form-field>
+              <button
+                color="primary"
+                mat-icon-button
+                type="button"
+                (click)="removeLinkEvidence(linkIndex)"
+              >
+                <mat-icon
+                  class="remove-btn"
+                  aria-hidden="false"
+                  aria-label="remove"
+                  >clear</mat-icon
+                >
+              </button>
+            </div>
+            <button
+              color="primary"
+              mat-icon-button
+              type="button"
+              (click)="addLinkEvidence()"
+            >
+              <mat-icon class="add-btn" aria-hidden="false" aria-label="add"
+                >add</mat-icon
+              >
+            </button>
+          </div>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="extraPunishInfo" optional="true">
+        <form [formGroup]="extraPunishInfo">
+          <ng-template matStepLabel>Extra info</ng-template>
+          <mat-form-field appearance="fill">
+            <input
+              matInput
+              placeholder="Extra info"
+              formControlName="extraInfo"
+            />
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        You are now done.
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="submitPunishment()">Submit</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
   </div>
 
   <div id="plrInfo">
